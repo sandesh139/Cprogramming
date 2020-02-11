@@ -63,7 +63,7 @@ void push(struct stack_t *theStack, char *value)
     entry->data = copyString(value);
     entry->next = theStack->head;
     theStack->head = entry;
-    theStack->stackSize++strstr(data, okVeritas);
+    theStack->stackSize++;
   }
   else
   {
@@ -98,14 +98,14 @@ void pop(struct stack_t *theStack)
     theStack->stackSize--;
   }
 }
-    int main()
-    {
 
+
+    void findVeritas(){
     struct stack_t myStack = {NULL, 0};
     FILE * fp;
     fp = fopen("Veritas System Recovery.log.txt" , "r");
     char singleLines[1000];
-    int d,m,y;
+    int day,month,year;
     if(fp == NULL)
     {
         printf("\n Error in opening the file");
@@ -136,11 +136,56 @@ void pop(struct stack_t *theStack)
         if(strstr(data, okVeritas) && strstr(data, okSuccess)){
             printf("\n \n Got it \n %s \n ", data);
             boolValue =0;
+            int boolDate =1;
+            int counter =0;
+            int date =0;
+            int dateCounter =0;
+            int yearCounter =0;
+
+            while(boolDate){
+                char c = data[dateCounter];
+                printf("\nthis is char = %c \n", c);
+                if(data[dateCounter] == 47 || yearCounter ==4){
+                    switch(counter){
+                    case 0:
+                        month =date;
+                        date =0;
+                        printf("this is month");
+                        break;
+                    case 1:
+                        day = date;
+                        date =0;
+                        printf("this is day");
+
+                        break;
+                    case 2:
+                        year = date;
+                        date =0;
+                        printf("this is date %d  %d  %d", month ,day, year);
+                        boolDate = 0;
+                        break;
+                    }
+                    counter++;
+                }
+                else {
+                    date = date *10 +(c -'0');
+                    if(counter ==2){
+                        yearCounter++;
+                    }
+
+                }
+                dateCounter++;
+            }
 
         }
-        pop(&myStack)
+        pop(&myStack);
     }
 
     fclose(fp);
-    return 0;
-}
+    }
+
+int main()
+    {
+     findVeritas();
+     return 0;
+    }
